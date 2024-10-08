@@ -420,11 +420,7 @@
       </section>
 
 
-
-      
-      
-
-    <!-- Contact Section -->
+<!-- Contact Section -->
 <section id="contact" class="contact section">
 
   <!-- Section Title -->
@@ -438,38 +434,13 @@
 
       <div class="col-lg-5">
         <div class="info-wrap">
-          <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="200">
-            <i class="bi bi-geo-alt flex-shrink-0"></i>
-            <div>
-              <h3>Address</h3>
-              <p>140 West Big Springs Road</p>
-            </div>
-          </div><!-- End Info Item -->
-
-          <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="300">
-            <i class="bi bi-telephone flex-shrink-0"></i>
-            <div>
-              <h3>Call me</h3>
-              <p>+1 9092040302</p>
-            </div>
-          </div><!-- End Info Item -->
-
-          <div class="info-item d-flex" data-aos="fade-up" data-aos-delay="400">
-            <i class="bi bi-envelope flex-shrink-0"></i>
-            <div>
-              <h3>Email me</h3>
-              <p>krohithreddykprof@gmail.com</p>
-              <p>rkanc004@ucr.edu</p>
-            </div>
-          </div><!-- End Info Item -->
-
-          <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3308.671273218304!2d-117.31693988805566!3d33.97528777307422!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x80dcaef80ebb07d3%3A0x5684be8de9a296f4!2s140%20W%20Big%20Springs%20Rd%2C%20Riverside%2C%20CA%2092507!5e0!3m2!1sen!2sus!4v1728342459064!5m2!1sen!2sus" frameborder="0" style="border:0; width: 100%; height: 270px;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+          <!-- Info content here (Address, Phone, etc.) -->
         </div>
       </div>
 
       <div class="col-lg-7">
         <!-- Update action with your Formspree form endpoint -->
-        <form action="https://formspree.io/f/xjkvbpel" method="POST" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+        <form id="contact-form" action="https://formspree.io/f/{yourFormID}" method="POST" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
           <div class="row gy-4">
 
             <div class="col-md-6">
@@ -510,12 +481,48 @@
 
 </section><!-- /Contact Section -->
 
+<!-- Add JavaScript to handle Formspree response -->
+<script>
+  const form = document.getElementById('contact-form');
+  form.addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent default form submission behavior
 
-        </div>
+    const formData = new FormData(form); // Collect form data
+    const action = form.getAttribute('action');
+    const method = form.getAttribute('method');
 
-      </div>
+    // Show loading spinner
+    document.querySelector('.loading').style.display = 'block';
+    document.querySelector('.error-message').style.display = 'none';
+    document.querySelector('.sent-message').style.display = 'none';
 
-    </section><!-- /Contact Section -->
+    try {
+      const response = await fetch(action, {
+        method: method,
+        body: formData,
+        headers: {
+          'Accept': 'application/json',
+        },
+      });
+
+      document.querySelector('.loading').style.display = 'none';
+
+      if (response.ok) {
+        document.querySelector('.sent-message').style.display = 'block'; // Show success message
+        form.reset(); // Reset the form after successful submission
+      } else {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Form submission failed');
+      }
+    } catch (error) {
+      document.querySelector('.error-message').style.display = 'block';
+      document.querySelector('.error-message').textContent = error.message;
+    }
+  });
+</script>
+
+      
+      
 
   </main>
 
